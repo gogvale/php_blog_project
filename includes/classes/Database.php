@@ -2,10 +2,6 @@
 
 class Database
 {
-    const SELECTSINGLE = 1;
-    const SELECTALL = 2;
-    const EXECUTE = 3;
-
     private PDO $pdo;
 
     public function __construct()
@@ -16,11 +12,11 @@ class Database
 
     /**
      * @param string $sql
-     * @param int $mode
+     * @param DatabaseAction $mode
      * @param array $values = [":key1"=>"value1", ":key2"=>"value2", ...];
      * @return array|bool
      */
-    public function queryDB(string $sql, int $mode, array $values = []): array|bool
+    public function queryDB(string $sql, DatabaseAction $mode, array $values = []): array|bool
     {
         $stmt = $this->pdo->prepare($sql);
         foreach ($values as $key => $value) {
@@ -28,9 +24,9 @@ class Database
         }
         $stmt->execute();
         return match ($mode) {
-            self::SELECTSINGLE => $stmt->fetch(PDO::FETCH_ASSOC),
-            self::SELECTALL => $stmt->fetchAll(PDO::FETCH_ASSOC),
-            self::EXECUTE => true,
+            DatabaseAction::SELECTSINGLE => $stmt->fetch(PDO::FETCH_ASSOC),
+            DatabaseAction::SELECTALL => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            DatabaseAction::EXECUTE => true,
             default => throw new InvalidArgumentException('Invalid Mode'),
         };
     }
