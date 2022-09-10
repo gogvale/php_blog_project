@@ -1,5 +1,4 @@
 <?php
-include_once "BlogReader.php";
 
 class BlogMember extends BlogReader
 {
