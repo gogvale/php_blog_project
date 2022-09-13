@@ -1,88 +1,104 @@
 <?php
 
-class BlogMember extends BlogReader
-{
-    private string $username;
+    class BlogMember extends BlogReader{
+        
+        private $username;
+        
+        public function __construct($pUsername){
+            parent::__construct();
+            $this->username = $pUsername;
+            $this->type = BlogMember::MEMBER;
+        }
+        
+        public function isDuplicateID(){
+            
+            $sql = "SELECT count(username) AS num FROM members WHERE username = :username";
+            
+            $values = array(
+                array(':username', $this->username)
+            );
+        
+            $result = $this->db->queryDB($sql, Database::SELECTSINGLE, $values);
 
-    /**
-     * @param string $pUsername
-     */
-    public function __construct(string $pUsername)
-    {
-        parent::__construct();
-        $this->username = $pUsername;
-        $this->type = self::MEMBER;
+            if ($result['num'] == 0)
+                return false;
+            else
+                return true;                
+            
+        }
+        
+        public function insertIntoMemberDB($pPassword){
+            
+            $sql = "INSERT INTO members (username, password) VALUES (:username, :password)";
+            
+            $values = array(
+                array(':username', $this->username),
+                array(':password', password_hash($pPassword, PASSWORD_DEFAULT))
+            );
+
+            $this->db->queryDB($sql, Database::EXECUTE, $values);
+
+        }
+        
+        public function isValidLogin($pPassword){
+            $sql = "SELECT password FROM members WHERE username = :username";
+            
+            $values = array(
+                array(':username', $this->username)
+            );
+
+            $result = $this->db->queryDB($sql, Database::SELECTSINGLE, $values);
+            
+            if (isset($result['password']) && password_verify($pPassword, $result['password']))
+                return true;
+            else
+                return false;
+
+        }
+        
+        private function getLatestPostID(){
+            $sql = "SELECT max(id) AS max FROM posts";
+            
+            $result = $this->db->queryDB($sql, Database::SELECTSINGLE);
+            
+            if (isset($result['max']))
+                return $result['max'];
+            else
+                return 0;
+            
+        }
+        
+        public function updateLastViewedPost(){
+            $max = $this->getLatestPostID();
+            
+            $sql = "UPDATE members SET last_viewed = :max WHERE username = :username";
+            
+            $values = array(
+                array(':max', $max),
+                array(':username', $this->username)
+            );
+
+            $this->db->queryDB($sql, Database::EXECUTE, $values);
+            
+        }
+        
+        public function getLastViewedPost(){
+            $sql = "SELECT last_viewed FROM members WHERE username = :username";
+
+            $values = array(
+                array(':username', $this->username)
+            );
+
+            $result = $this->db->queryDB($sql, Database::SELECTSINGLE, $values);
+            
+            if (isset($result['last_viewed']))
+                return $result['last_viewed'];
+            else
+                return 0;
+            
+        }
     }
 
-    /**
-     * Checks if username already exists
-     * @return bool
-     */
-    public function isDuplicateID(): bool
-    {
-        $sql = "SELECT COUNT(username) as num from members WHERE username = :username";
-        $values = [':username' => $this->username];
-        return $this->db->queryDB($sql, DatabaseAction::SELECTSINGLE, $values)['num'] != 0;
-    }
 
-    /**
-     * Sign up method
-     * @param string $pPassword
-     * @return bool
-     */
-    public function insertIntoMemberDB(string $pPassword): bool
-    {
-        if ($this->isDuplicateID()) return false;
 
-        $sql = "INSERT INTO members (username, password) VALUES (:username, :password)";
-        $values = [
-            ":username" => $this->username,
-            ":password" => password_hash($pPassword, PASSWORD_DEFAULT)
-        ];
-        return $this->db->queryDB($sql, DatabaseAction::EXECUTE, $values);
-    }
 
-    /**
-     * @param string $pPassword
-     * @return bool
-     */
-    public function isValidLogin(string $pPassword): bool
-    {
-        $sql = "SELECT password FROM members WHERE username = :username";
-        $values = [":username" => $this->username];
-        $result = $this->db->queryDB($sql, DatabaseAction::SELECTSINGLE, $values);
-        return isset($result['password']) && password_verify($pPassword, $result['password']);
-    }
-
-    private function getLatestPostID(): int
-    {
-        $sql = "SELECT max(id) AS max FROM posts";
-        return $this->db->queryDB($sql, DatabaseAction::SELECTSINGLE)['max'] ?? 0;
-    }
-
-    /**
-     * @return bool
-     */
-    public function updateLastViewedPost(): bool
-    {
-        $max = $this->getLatestPostID();
-        $sql = "UPDATE members SET last_viewed = :max WHERE username = :username";
-        $values = [
-            ":username" => $this->username,
-            ":max" => $max
-        ];
-        return $this->db->queryDB($sql, DatabaseAction::EXECUTE, $values);
-    }
-
-    /**
-     * @return int|bool
-     */
-    public function getLastViewedPost(): int|bool
-    {
-        $sql = "SELECT last_viewed FROM members WHERE username = :username";
-        $values = [':username' => $this->username];
-
-        $result = $this->db->queryDB($sql, DatabaseAction::SELECTSINGLE, $values);
-        return !$result ? $result : $result['last_viewed'];
-    }
-}
