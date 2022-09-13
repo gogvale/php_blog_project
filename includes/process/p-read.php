@@ -15,7 +15,7 @@
 
         $posts = $reader->getPostsFromDB();
 
-    if ($posts == false){
+    if (!$posts){
         include "output_code/blankcard.html";
     }else{
         foreach($posts as $result)

@@ -6,7 +6,7 @@ class Database{
     const SELECTALL = 2;
     const EXECUTE = 3;
         
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct(){
         

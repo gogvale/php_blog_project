@@ -2,8 +2,8 @@
 
 class Admin{
     
-    private $db;
-    private $username;
+    private Database $db;
+    private string $username;
 
     public function __construct($pUsername){
         $this->db = new Database();
@@ -11,7 +11,8 @@ class Admin{
     }
 
 
-    public function isValidLogin($pPassword){
+    public function isValidLogin($pPassword): bool
+    {
         $sql = "SELECT password FROM members WHERE username = :username AND is_admin = true";
 
         $values = array(
@@ -27,7 +28,8 @@ class Admin{
 
     } 
     
-    public function insertIntoPostDB($title, $post, $audience){
+    public function insertIntoPostDB($title, $post, $audience): void
+    {
         
         
         $sql = "INSERT INTO posts (username, title, post, audience) VALUES (:username, :title, :post, :audience)";

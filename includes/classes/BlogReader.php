@@ -5,8 +5,8 @@ class BlogReader{
     const READER = 1;
     const MEMBER = 2;
     
-    protected $db;
-    protected $type;
+    protected Database $db;
+    protected int $type;
 
     public function __construct(){
         

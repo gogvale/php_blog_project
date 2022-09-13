@@ -3,7 +3,8 @@
 //    error_reporting(E_ALL); 
 //    ini_set('display_errors', '1');
 
-    function myDebugger($msg, $file, $line, $trace = ''){
+    function myDebugger($msg, $file, $line, $trace = ''): void
+    {
 
 
         $message = $trace.'<BR><BR><strong>'.$msg.'</strong> found on <u>line '.$line.'</u> in file <u>'.$file.'</u>';                        
@@ -17,17 +18,18 @@
     }
 
 
-    function myExceptionHandler ($e)
+    function myExceptionHandler ($e): void
     {                
         myDebugger($e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());   
     }
 
-    function myErrorHandler($errno, $errstr, $errfile, $errline)
+    function myErrorHandler($errno, $errstr, $errfile, $errline): void
     {
         myDebugger($errstr, $errfile, $errline);
     }
 
-    function myShutDownHandler(){
+    function myShutDownHandler(): void
+    {
 
         $lastError = error_get_last();
 

@@ -2,7 +2,7 @@
 
     class BlogMember extends BlogReader{
         
-        private $username;
+        private string $username;
         
         public function __construct($pUsername){
             parent::__construct();
@@ -10,7 +10,8 @@
             $this->type = BlogMember::MEMBER;
         }
         
-        public function isDuplicateID(){
+        public function isDuplicateID(): bool
+        {
             
             $sql = "SELECT count(username) AS num FROM members WHERE username = :username";
             
@@ -40,7 +41,8 @@
 
         }
         
-        public function isValidLogin($pPassword){
+        public function isValidLogin($pPassword): bool
+        {
             $sql = "SELECT password FROM members WHERE username = :username";
             
             $values = array(
@@ -60,12 +62,9 @@
             $sql = "SELECT max(id) AS max FROM posts";
             
             $result = $this->db->queryDB($sql, Database::SELECTSINGLE);
-            
-            if (isset($result['max']))
-                return $result['max'];
-            else
-                return 0;
-            
+
+            return $result['max'] ?? 0;
+
         }
         
         public function updateLastViewedPost(){
@@ -90,12 +89,9 @@
             );
 
             $result = $this->db->queryDB($sql, Database::SELECTSINGLE, $values);
-            
-            if (isset($result['last_viewed']))
-                return $result['last_viewed'];
-            else
-                return 0;
-            
+
+            return $result['last_viewed'] ?? 0;
+
         }
     }
 

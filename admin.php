@@ -29,7 +29,7 @@
             <div class = "formerror"><?php echo $msg; ?></div>                
             <div class="form-group">
                 <div>
-                    <center><button type="submit" name = "submit" class="btn btn-primary btn-lg">Log In</button></center>
+                    <div style="text-align: center;"><button type="submit" name = "submit" class="btn btn-primary btn-lg">Log In</button></div>
                 </div>  
             </div>		      
 
