@@ -4,7 +4,7 @@ $h = new Helper();
 $msg = '';
 $username = '';
 
-if ($_POST['submit']) {
+if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
