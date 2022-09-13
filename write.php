@@ -1,4 +1,14 @@
-    <body>        
+<?php
+
+session_start();
+include "UI_include.php";
+include INC_DIR."/process/p-write.php";
+include INC_DIR.'header.html';
+
+?>
+
+
+    <body>
         <script>
             $(function(){
             setTimeout(function() {
@@ -18,7 +28,7 @@
                     <script>CKEDITOR.replace('post', {height: 500});
                     </script>                    
                 </div>
-                <div id = "error" class="error">Error Message Here</div>
+                <div id = "error" class="error"><?= $msg ?></div>
                 <div id="submit-section">        
                     <input id = "postsubmit" class="btn btn-primary" type="submit" name="submit" value="Send" />                    
                     <select id = "postoptions" class = "custom-select" name = "audience">

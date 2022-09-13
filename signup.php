@@ -1,3 +1,11 @@
+<?php
+
+include "UI_include.php";
+include INC_DIR."/process/p-signup.php";
+include INC_DIR.'header.html';
+
+?>
+
     <body>
         <div class="form">
             <div class="heading">
@@ -24,7 +32,7 @@
                         <input type="password" class="form-control" name="confirm_password">
                     </div>        	
                 </div>
-                <div class = "formerror">Error Message Here</div>
+                <div class = "formerror"><?= $msg ?></div>
                 <div class="form-group">
                     <div>
                         <div style="text-align: center;"><button type="submit" name = "submit" class="btn btn-primary btn-lg">Sign Up</button></div>
