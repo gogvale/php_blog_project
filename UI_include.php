@@ -1,6 +1,6 @@
 <?php
 
-    define("INC_DIR", $_SERVER["DOCUMENT_ROOT"]. "/phpproject-complete/includes/");
+    define("INC_DIR", $_SERVER["DOCUMENT_ROOT"]. "/includes/");
 
     //Auto Load Classes
     include INC_DIR.'loadclasses.php';
